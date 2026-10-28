@@ -1,5 +1,7 @@
 # osd-brightness-bridge
 
+[![build](https://github.com/zhao-ziyi/osd-brightness-bridge/actions/workflows/build.yml/badge.svg)](https://github.com/zhao-ziyi/osd-brightness-bridge/actions/workflows/build.yml)
+
 > Windows: mirror the system brightness OSD value to external monitors via DDC/CI — make Fn brightness keys actually work.
 
 Zero-UI · stateless · ~100 KB exe / ~2 MB RAM / 0% CPU · single native binary.

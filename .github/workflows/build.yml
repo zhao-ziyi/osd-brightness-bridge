@@ -1,0 +1,41 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Build
+        run: cl /nologo /O2 /W3 /WX /utf-8 bridge.c /Fe:bridge.exe /link user32.lib powrprof.lib dxva2.lib shell32.lib advapi32.lib /SUBSYSTEM:WINDOWS
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: osd-brightness-bridge-win-x64
+          path: bridge.exe
+
+      # 打 v* 标签时自动发 Release 并附上编译产物
+      - name: Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: pwsh
+        run: Copy-Item bridge.exe osd-brightness-bridge-win-x64.exe
+
+      - name: Publish release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: osd-brightness-bridge-win-x64.exe
+          generate_release_notes: true
